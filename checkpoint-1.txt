@@ -1,0 +1,77 @@
+1. a. String
+   b. Integer
+   c. Date
+   d. Float
+   e. Decimal
+
+2. A Database might be used anytime a collection of data needs to be stored
+   and retrieved. Whether that is a bank keeping records of an account, or
+   Google keeping tabs on my digital life. Just about anything we do can be
+   represented as data and is therefore storable in a database. If data can
+   be leveraged for some type of gain, it will be collected and used. In the
+   context of when to use a Text file instead of a Database, if there was
+   only a single text file and it was not going to be changed then it could
+   just be stored as a text file. Or if the data was not to be broken down at
+   all and just needed to be stored as one lump text file.
+
+3. SQL is declarative and not procedural, meaning that as a user we can 'tell'
+   the database what we want in the language of SQL and expect it to respond
+   with what we asked for. This is contrasted by procedural languages where
+   we write code that tells the computer what to do OR how to do what we want
+   it to do with the data in question.
+
+4. How the pieces of a database system fit together at a high level. A database
+   is made up of tables. A table might contain all the users for a website. A
+   table arranges data in a logical structure made of columns and rows. A column
+   might contain the username of each user. A row contains all of the columns
+   stored about one user. As a user of a database we can use SQL to write statements
+   which request data from a database, or request to make changes of that data.
+   In one scenario, by way of a web server, the data contained in a database can
+   be made available to applications through an application interface, an API.
+
+5. Table  - A collection of related data in a structure format.
+   Row    - One record from a database table.
+   Column - One category of data held in a table about each record.
+   Value  - The data stored in a single cell of a database table (where one
+            row and one column intersect.)
+
+6. Date, String, Decimal
+
+7. What is the date and amount of each entry in the Payments table?
+
+  date	      amount
+  2016-05-01	1500
+  2016-05-10	37
+  2016-05-15	124.93
+  2016-05-23	54.72
+
+  Show me the amount of all payments that were over 500.
+
+  amount
+  1500.00
+
+  Show me everything you have on payments made to Mega Foods.
+
+  date        payee       amount  memo
+  2016-05-15  Mega Foods  124.93  Groceries
+
+8. SELECT email, signup
+   FROM users
+   WHERE name = 'DeAndre Data';
+
+   email	            signup
+   datad@comcast.net	2008-01-20
+
+   SELECT userid
+   FROM users
+   WHERE email = 'aleesia.algorithm@uw.edu';
+
+   userid
+   1
+
+   SELECT *
+   FROM users
+   WHERE userid = 4;
+   
+   userid	name	          email	            signup
+   4	    Brandy Boolean	bboolean@nasa.gov	1999-10-15
