@@ -1,0 +1,100 @@
+1. SELECT column_1, column_2
+   FROM   table
+   WHERE  column_1 > x;
+
+2. Still
+   Frozen
+   Water
+
+3. SELECT name, gender, age
+   FROM   dogs
+   WHERE  breed LIKE '%labrador%';
+
+   SELECT id
+   FROM   dogs
+   WHERE  age < 1;
+
+   SELECT name, age
+   FROM   dogs
+   WHERE  gender = 'F'
+   AND    weight > 35;
+
+   SELECT *
+   FROM   dogs
+   WHERE  breed NOT LIKE '%shepherd%';
+
+   SELECT id, age, weight, breed
+   from   dogs
+   WHERE  weight > 60
+   OR     breed LIKE '%great dane%';
+
+4. SELECT name, adoption_date
+   FROM cats;
+
+   name	 adoption_date
+   Mushi	2016-03-22
+   Seashell	(null)
+   Azul	2016-04-17
+   Victoire	2016-09-01
+   Nala	(null)
+
+   SELECT name, age
+   FROM cats;
+
+   name	   age
+   Mushi	  1
+   Seashell	7
+   Azul	    3
+   Victoire	7
+   Nala	    1
+
+5. SELECT *
+   FROM   cats;
+
+   SELECT name, gender
+   FROM   cats
+   WHERE  age = 7;
+
+   SELECT name
+   FROM   cats;
+
+6. Comparison Operators
+
+   < less than - If you wanted all users who had made fewer than 10 purchases this month.
+                 WHERE purchases < 10;
+
+   > greater than - If you wanted all products that cost more than $100
+                    WHERE cost > 100;
+
+   <= less than or equal to - If you wanted to select all products that cost $10 or less.
+                              WHERE cost <= 10;
+
+   >= greater than or equal to - If you wanted to select all products that cost $11 or more.
+                                 WHERE cost >= 11;
+
+   != and <> does not equal (or is less than or greater than ) - If you wanted to select
+                                 all t-shirts that did not cost $15.
+                                 WHERE cost != 15;
+                                 WHERE cost <> 15;
+   =  equals - If you wanted to select all movies currently playing in a theatre.
+               WHERE currently_showing = true;
+
+7. SELECT name FROM cats WHERE gender = 'F';
+
+    name
+    Seashell
+    Nala
+
+   SELECT name FROM cats WHERE age <> 3;
+
+    name
+    Mushi
+    Seashell
+    Victoire
+    Nala
+
+    SELECT id FROM cats WHERE name != 'Mushi' AND gender = 'M';
+
+    id
+    3
+    4
