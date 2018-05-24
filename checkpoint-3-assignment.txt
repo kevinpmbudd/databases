@@ -1,0 +1,135 @@
+1. adding: INSERT INTO
+   updating: UPDATE
+   delete: DELETE FROM
+
+2. INSERT INTO table_name (column_x, column_y) VALUES (data, data);
+
+   After INSERT INTO the table name is written, followed by a list of the
+   columns of data to be inserted (enclosed in parenthesis). If the
+   column names are omitted SQL assumes the data is being listed in the
+   order of the columns as they exist in the table. Lastly VALUES is
+   followed by a parenthesis enclosed/comma separated list of the data
+   to be added corresponding to the columns. One row of data can be added
+   or multiple rows.
+
+   UPDATE table_name SET column = data WHERE id=1234;
+
+   UPDATE begins the statement followed by the table name. SET comes next
+   and one or multiple columns can be listed to pass in new data for
+   the column(s). WHERE is used to match the record or records to be
+   changed.
+
+   DELETE FROM table_name WHERE column = data
+
+   DELETE FROM is followed by the table name. The WHERE clause can match
+   a single row or many rows, any matching row(s) will be deleted.
+
+3. Boolean - example = whether a user wants to receive newsletter email.
+   Integer - quantity of a product in stock for an online store.
+   JSON - details of users profile.
+   Date - Day a user made a purchase from a site.
+   Array - an array of text based comments stored for a blog post.
+
+4. - Data types
+   first and last name : text
+   rsvp                : boolean
+   guests              : integer
+   meals               : numeric(3,2)
+
+   - Create table
+
+   CREATE TABLE wedding (
+        first_name text,
+        last_name  text,
+        rsvp       boolean,
+        meals      numeric(3,2)
+   );
+
+
+   - Add column for Thank Yous
+
+   ALTER TABLE wedding ADD COLUMN thank_yous boolean;
+
+   - Remove meals column
+
+   ALTER TABLE wedding DROP COLUMN meals;
+
+   - Add table number columns
+
+   ALTER TABLE wedding ADD COLUMN table_number integer;
+
+   - Delete wedding table
+
+   DROP TABLE wedding;
+
+
+5. CREATE TABLE library (
+      isbn             char(10),
+      title            text,
+      author           text,
+      genre            text,
+      publishing_date  date,
+      number_of_copies integer,
+      available_copies integer
+   );
+
+   INSERT INTO library (ISBN, title, author, genre, publishing_date, number_of_copies, available_copies)
+   VALUES
+   ('0140455113', 'The Republic', 'Plato', 'Philosophy', '2007-05-31', 1, 1),
+   ('8170580412', 'Isha Upanishad', 'Sri Aurobindo', 'Spirituality', '1986-01-01', 11, 10),
+   ('0671867806', 'Being and Nothingness', 'Jean-Paul Sartre', 'Metaphysics', '1993-08-01', 4, 2);
+
+   UPDATE library SET available_copies = available_copies - 1 WHERE isbn = '0140455113';
+
+   DELETE FROM library WHERE isbn = '0671867806';
+
+6. CREATE TABLE spacecrafts (
+      id                  integer,
+      name                text,
+      year_launched       integer,
+      country_of_origin   text,
+      mission_description text,
+      orbiting_body       text,
+      currently_operating boolean,
+      miles_from_earth    bigint
+   );
+
+   INSERT INTO spacecrafts (id, name, year_launched, country_of_origin,
+                            mission_description, orbiting_body, currently_operating,
+                            miles_from_earth)
+   VALUES
+   (1, 'Juno', 2011, 'USA', 'Scientific Investigation of Jupiter', 'Jupiter', true, 365366261),
+   (2, 'Mangalyaan', 2013, 'India', 'Technology demonstrator project for interplanetary missions',
+   'Mars', true, 33926867),
+   (3, 'Akatsuki', 2010, 'Japan', 'Observation of the planet Venus', 'Venus', true, 162177881);
+
+   DELETE FROM spacecrafts WHERE id = 1;
+
+   UPDATE spacecrafts SET currently_operating = false WHERE id = 2;
+
+7. CREATE TABLE inbox (
+      id                    integer,
+      subject               text,
+      sender                text,
+      additional_recipients text[],
+      body                  text,
+      timestamp             timestamp,
+      read                  boolean,
+      chain_id              integer
+   );
+
+   INSERT INTO inbox (id, subject, sender, additional_recipients, body,
+                      timestamp, read, chain_id)
+   VALUES
+   (1, 'Weekend Plans', 'john.miller@gmail.com', '{abby@gmail.com, dan@gmail.com}',
+    'What are you planning to do this weekend? I hear theres a party.',
+     '2018-05-22 12:31:13', false, 11),
+   (2, 'Directions', 'francis@gmail.com', '{john.miller@gmail.com}',
+    'Hi Fran, How do I get to the picnic?', '2018-05-23 06:44:56', true, 13),
+   (3, 'New Movie', 'king_of_submarines@gmail.com', '{wild_one@gmail.com}',
+    'Hey, Are there any new movies on Netflix that are good?',
+    '2018-05-23 22:33:44', false, 14);
+
+   DELETE FROM inbox WHERE id = 2;
+
+   UPDATE inbox SET read = false WHERE id = 3;
