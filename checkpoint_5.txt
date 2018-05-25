@@ -1,0 +1,127 @@
+1. SUM   - returns the total of all values in a numeric column.
+
+         SELECT SUM(score) FROM tests;
+
+   COUNT - returns the number of rows in a column, can be used in conjuection
+           with DISCTINCT.
+
+         SELECT COUNT(test_id) FROM tests;
+
+   MIN   - returns the lowest value in the given column.
+
+         SELECT MIN(score) FROM tests;
+
+   MAX   - returns the highest value in the given column.
+
+         SELECT MAX(score) FROM tests;
+
+   AVG   -  returns the average of all values in a given column.
+
+         SELECT AVG(score) FROM tests;
+
+2. SELECT SUM(amount) FROM donations;
+
+   sum
+   993
+
+   SELECT SUM(amount), donor from donations GROUP BY donor;
+
+    sum	donor
+    20	Samwell
+    10	Daario
+    75	Brienne
+    120	Tyrion
+    70	Petyr
+    45	Melisandre
+    25	Bran
+    50	Tormund
+    30	Ygritte
+    7	  Gilly
+    25	Jon
+    60	Arya
+    20	Theon
+    20	Bronn
+    120	Margaery
+    90	Missandei
+    33	Sansa
+    173	Daenerys
+
+    SELECT AVG(amount), donor from donations GROUP BY donor;
+
+    avg	 donor
+    20	 Samwell
+    10	 Daario
+    75	 Brienne
+    40	 Tyrion
+    70	 Petyr
+    45	 Melisandre
+    25	 Bran
+    50	 Tormund
+    30	 Ygritte
+    7	   Gilly
+    25	 Jon
+    20	 Arya
+    10	 Theon
+    20	 Bronn
+    120	 Margaery
+    22.5 Missandei
+    33	 Sansa
+    86.5 Daenerys
+
+    SELECT COUNT(amount) FROM donations WHERE amount > 100;
+
+    count
+    2
+
+    SELECT MAX(amount) FROM donations;
+
+    max
+    120
+
+    SELECT MIN(amount) FROM donations;
+
+    min
+    5
+
+3. ORDER BY - ascending is default, pass in DESC for descending.
+
+4. OFFSET - real world example. If a teacher was giving a students multiple tests
+            and they dropped the lowest test grade, they could order by test
+            score and offset by 1.
+
+5. ORDER BY will first sort the results according to a given column and so when
+    LIMIT is applied it can have a meaningful effect on what is returned.
+
+6. If an aggregator function is applied, such as GROUP BY, WHERE is applied to
+    the data before the aggregator function is run. HAVING is applied after the
+    aggregator function is run.
+
+7. SELECT id, SUM(amount)
+   FROM payment
+   GROUP BY id
+   HAVING SUM(amount) > 200;
+
+8. SELECT *
+   FROM cats
+   ORDER BY intake_date;
+
+   SELECT *
+   FROM adoptions
+   ORDER BY date DESC
+   LIMIT 5;
+
+   SELECT * FROM cats
+   WHERE gender = 'F'
+   AND age >= 2;
+
+   SELECT SUM(amount) as cumulative_donations, donor
+   FROM donations
+   GROUP BY donor
+   ORDER BY cumulative_donations DESC
+   LIMIT 5;
+
+   SELECT SUM(amount) as cumulative_donations, donor
+   FROM donations
+   GROUP BY donor
+   ORDER BY cumulative_donations DESC
+   LIMIT 10 OFFSET 5;
