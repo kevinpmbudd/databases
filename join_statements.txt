@@ -1,0 +1,298 @@
+1. By using the appropriate JOIN statement.
+
+2. CROSS JOIN - given multiple tables a cross join will return a table showing
+                all possible combinations of all the rows from each table.
+
+                Example: A customer table and a vacation_packages table. If
+                we wanted to create data showing each user associated with
+                each row in the vacation_packages table we would use a cross
+                join.
+
+                SELECT c.name, vp.destination
+                FROM customer AS c
+                CROSS JOIN vacation_packages AS vp;
+
+
+   INNER JOIN - The default join if not specified. An ON statement provides a
+                way of matching rows across multiple tables. The primary key in
+                one table and the same value as a foreign key in another table.
+                When there is a match in the ON statement a row combining data
+                from the multiple tables will be added to the results table.
+
+                Example: A customer table and an orders table. If we wanted to
+                see a results table with a customers name (from customer table)
+                and the price of each of their orders (from order table).
+
+                SELECT c.name, o.price
+                FROM customer AS c
+                JOIN order AS o
+                ON customer.id = order.customer_id;
+
+   LEFT OUTER JOIN - Given two tables the results of a L.O.J. will contain one
+                     row for each row in the 'FROM' table and if there is a
+                     match in the ON statement data from the second table will
+                     be added to that row, otherwise that row will have NULL
+                     data from the second table.
+
+                     Example: An online store with products that are made by
+                     Producers (a product table and a producer table). If we
+                     wanted a results table with all the Producer rows combined
+                     with all the Products made by that Producer. But from time to time
+                     a Producer resets their own product line and offers no
+                     products. A L.O.J would show all the Products associated
+                     with their Producer and if a Producer had no Products that
+                     Producer would have a NULL value in their product.name column.
+
+                     SELECT producer.name, product.name
+                     FROM producer
+                     LEFT OUTER JOIN product
+                     ON product.producer_id = producer.id;
+
+
+   RIGHT OUTER JOIN - Different from the Left Outer Join in that All rows from a
+                      second table will be represented in the results table but
+                      if there is no match in the join condition a NULL value is
+                      returned representing the first table.
+
+                      Example: From the previous Products/Producer example, If
+                      we as a store from time to time discovered products in our
+                      warehouse that we had lost the provenance for but we still
+                      wanted to store them in our database a RIGHT OUTER JOIN
+                      would list one row for each row in our Products table
+                      and if we had data on the Producer that data would be reflected
+                      in the results table but if we didn't know the Producer then
+                      the row would have NULL in the Producer.name column for instance.
+
+                      SELECT product.name, producer.name
+                      FROM producer
+                      RIGHT OUTER JOIN product
+                      ON product.producer_id = producer.id;
+
+   FULL OUTER JOIN - For two tables the results will contain at least one row
+                     from each row of the two tables. If the join condition does
+                     not match then NULL will be return for whichever side of the
+                     join condition was not matched.
+
+                     Example: Following same example as previous, if we wanted a
+                     results table showing All Products and All Producers even
+                     if a Products Producer was unknown OR a Producer was not
+                     offering any Products then a FULL OUTER JOIN would show this.
+
+                     SELECT producer.name, product.name
+                     FROM producer
+                     FULL OUTER JOIN product
+                     ON product.producer_id = producer.id;
+
+
+3. Primary Key - Represented by a column in a table where each row has a Unique value.
+                 Used to identify or find a specific row.
+
+   Foreign Key - Essentially it is a primary key from one table stored as a value
+                 for a row in another table so data from one table can be associated
+                 with data from another table. While a Primary Key will be unique
+                 within a table, one table could contain multiple rows with the same
+                 foreigh key value.
+
+                 Example: A Customer is given a 'Primary Key' in the form of the id
+                 column in the customer table. In the orders table each row needs to
+                 indicate which customer placed the order so a customer_id column will
+                 store the value of the Customer's id column.
+
+4. Aliasing - a way to identify a table via shorthand (a short variable) in a query.
+
+5. SELECT p.name, c.salary, c.vacation_days
+   FROM professor AS p
+   JOIN compensation AS c
+   ON p.id = c.professor_id;
+
+6. If you wanted to produce a results table made up of only the columns that exist
+   in all of the joined tables.
+   Example: If you sold products such as all types of clothes
+   and wanted to create a results table that listed all of the colors of all the
+   things you sold and you had multiple tables for different types of products,
+   a pants table and shirts table, and each of these tables had color column
+   and a product name column and a brand column. If these were the only columns
+   you wanted and they were common among all tables you could use a natural join.
+
+   SELECT * FROM shirts NATURAL JOIN pants;
+
+7. SELECT employees.name, shifts.date
+   FROM scheduled_shifts
+   JOIN employees
+   ON scheduled_shifts.employee_id = employees.id
+   RIGHT OUTER JOIN shifts
+   ON scheduled_shifts.shift_id = shifts.id;
+
+8. SELECT CONCAT(v.first_name, ' ', v.last_name) AS volunteer, d.name AS dog
+   FROM volunteers AS v
+   LEFT JOIN dogs AS d
+   ON v.foster_dog_id = d.id;
+
+   first_name	last_name	  dog
+   Rubeus	    Hagrid	    Munchkin
+   Marjorie	  Dursley	    Marmaduke
+   Sirius	    Black	      (null)
+   Remus	    Lupin	      (null)
+   Albus	    Dumbledore	(null)
+
+   SELECT c.name AS cat, CONCAT(a.first_name, ' ', a.last_name) AS adopter, c_a.date
+   FROM cat_adoptions AS c_a
+   JOIN adopters AS a
+   ON c_a.adopter_id = a.id
+   JOIN cats AS c
+   ON c_a.cat_id = c.id
+   WHERE c_a.date > current_date - interval '30' day;
+
+   cat	    adopter	      date
+   Mushi	  Arabella Figg	2018-05-05
+   Victoire	Argus Filch	  2018-05-10
+
+   SELECT CONCAT(a.first_name, ' ', a.last_name) AS adopter
+   FROM adopters AS a
+   LEFT JOIN dog_adoptions AS d_a
+   ON d_a.adopter_id = a.id
+   WHERE d_a.adopter_id IS NULL;
+
+   adopter
+   Hermione Granger
+   Arabella Figg
+
+   SELECT d.name AS dog, CONCAT(a.first_name, ' ', a.last_name) AS adopter
+   FROM dogs AS d
+   LEFT JOIN dog_adoptions AS d_a
+   ON d_a.dog_id = d.id
+   INNER JOIN adopters AS a
+   ON TRUE
+   WHERE d_a.dog_id IS NULL;
+
+   dog	     adopter
+   Boujee	   Hermione Granger
+   Boujee	   Arabella Figg
+   Boujee	   Argus Filch
+   Munchkin	 Hermione Granger
+   Munchkin	 Arabella Figg
+   Munchkin	 Argus Filch
+   Marley	   Hermione Granger
+   Marley	   Arabella Figg
+   Marley	   Argus Filch
+   Lassie	   Hermione Granger
+   Lassie	   Arabella Figg
+   Lassie	   Argus Filch
+   Marmaduke Hermione Granger
+   Marmaduke Arabella Figg
+   Marmaduke Argus Filch
+
+   SELECT d.name
+   FROM dogs AS d
+   LEFT JOIN dog_adoptions AS d_a
+   ON d.id = d_a.dog_id
+   WHERE d_a.dog_id IS NULL;
+
+   name
+   Boujee
+   Munchkin
+   Marley
+   Lassie
+   Marmaduke
+
+   SELECT c.name
+   FROM cats AS c
+   LEFT JOIN cat_adoptions AS c_a
+   ON c.id = c_a.cat_id
+   WHERE c_a.cat_id IS NULL;
+
+   name
+   Seashell
+   Nala
+
+   SELECT CONCAT(v.first_name, ' ', v.last_name) AS volunteer, d.name AS dog
+   FROM volunteers AS v
+   FULL OUTER JOIN dogs AS d
+   ON v.foster_dog_id = d.id
+   WHERE v.available_to_foster = true
+   OR d.id IS NOT NULL
+   ORDER BY volunteer;
+
+   volunteer	      dog
+                    Boujee
+                    Rosco
+                    Marley
+                    Lassie
+   Marjorie Dursley	Marmaduke
+   Remus Lupin	    (null)
+   Rubeus Hagrid	  Munchkin
+   Sirius Black	    (null)
+
+   SELECT CONCAT(a.first_name, ' ', a.last_name) AS adopter
+   FROM adopters AS a
+   JOIN dog_adoptions AS d_a
+   ON d_a.adopter_id = a.id
+   JOIN dogs AS d
+   ON d_a.dog_id = d.id
+   WHERE d.name = 'Rosco';
+
+   adopter
+   Argus Filch
+
+9. SELECT p.name, h.rank AS position
+   FROM patrons AS p
+   JOIN holds AS h
+   ON h.patron_id = p.id
+   JOIN books AS b
+   ON h.isbn = b.isbn
+   WHERE b.title = 'Advanced Potion-Making'
+   ORDER BY h.rank;
+
+   name	          position
+   Terry Boot   	1
+   Cedric Diggory	2
+
+   SELECT b.title AS book, b.isbn, CASE WHEN MAX(t.checked_out_date) IS NULL THEN 'not checked out' ELSE 'checked out' END AS checkout
+   FROM books AS b
+   LEFT JOIN transactions AS t
+   ON b.isbn = t.isbn
+   GROUP BY b.isbn;
+
+   book	                                    isbn	      checkout
+   Advanced Potion-Making Part 2	          9136880000	not checked out
+   Fantastic Beasts and Where to Find Them	3458400871	checked out
+   Hogwarts: A History	                    1840918626	checked out
+   Advanced Potion-Making	                  9136884926	checked out
+
+   SELECT AVG(t.checked_in_date - t.checked_out_date) AS days, b.title
+   FROM transactions AS t
+   JOIN books AS b
+   ON b.isbn = t.isbn
+   WHERE t.checked_out_date > current_date - interval '30' day
+   AND t.checked_in_date IS NOT NULL
+   GROUP BY b.title
+
+   days	title
+   2.5	Fantastic Beasts and Where to Find Them
+
+   SELECT b.title
+   FROM books AS b
+   JOIN transactions AS t
+   ON b.isbn = t.isbn
+   GROUP BY b.title
+   HAVING MAX(t.checked_out_date) < current_date - interval '5' year;
+
+   title
+   Hogwarts: A History
+
+   SELECT p.name, b.title
+   FROM patrons AS p
+   LEFT JOIN transactions AS t
+   ON t.patron_id = p.id
+   JOIN books AS b
+   ON t.isbn = b.isbn
+   ORDER BY p.name;
+
+   name	            title
+   Cedric Diggory	  Fantastic Beasts and Where to Find Them
+   Cho Chang	      Advanced Potion-Making
+   Hermione Granger	Fantastic Beasts and Where to Find Them
+   Hermione Granger	Hogwarts: A History
+   Padma Patil	    Fantastic Beasts and Where to Find Them
+   Terry Boot	      Advanced Potion-Making
+   Terry Boot	      Fantastic Beasts and Where to Find Them
