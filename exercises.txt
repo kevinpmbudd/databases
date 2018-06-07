@@ -1,0 +1,50 @@
+1. Answers in hotel.sql
+
+2. What classes/entities do we need to model?
+
+   Students, Classes, Grades
+
+   What fields/attributes will each entity need? & What data types do we need to use?
+
+   Students:
+     id         integer
+     first_name text
+     last_name  text
+     email      text
+
+   Classes:
+     id           integer
+     name         text
+     teacher      text
+
+   Grades
+     student_id   integer
+     class_id     integer
+     grade        text
+
+
+   What relationships exist between entities?
+
+   Students and Classes have a many-to-many relationship. In order to implement the
+   relationship the Grades entity will serve as a join table to allow for creating
+   foreign keys to make the relationship between a student and their class.
+
+   A student can have many instances of grades where they are referenced.
+   A class can have many instances of grades where it is referenced.
+
+   How should those relationships be represented in tables?
+
+   A row in the grades table will represent a relationship between a row of the students
+   table and a row in the classes table.
+
+   *Assumptions, my brain wants to put a student as an attribute of the classes table
+   to show that they are in that class, which is not right. In order to break things down
+   to their most basic and unique essence each student will have a row in the students
+   table, each class will have a row in the classes table, and the grades table will
+   serve to record and represent that a student was in a class and furthermore it will
+   add the value that they earned a grade in the class and will even tell us what that
+   grade is.
+
+   - link to diagram https://app.quickdatabasediagrams.com/#/schema/3oxznYNybEGcqLsroN7Iug
+
+3. Answers in school.sql
