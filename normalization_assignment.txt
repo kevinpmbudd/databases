@@ -1,0 +1,119 @@
+1. Normalization removes redundancies from tables, making it faster to write
+to a database. Also because there are no redundancies it helps prevent mistakes
+when updating data, since if one piece of data only exists in one place there
+can be nowhere else where that data exists and would also need updating. By
+breaking table structures down to their most essential (non-repeated) state,
+normalization allows for a clearer picture of the relationships of data to be
+expressed. As an example, an online store who sells and ships groceries right to
+your door. In perhaps the least normalized form there could be one single table
+to hold all of the data each time an order is placed. Each time a repeating
+customer places an order all of their info would need to be repeated in a new
+row, their name, email, address, purchase method. Every time all of the same
+info has to be re-entered and stored in a new row in the database. As the
+beginning of the normalization process, a customer table could be broken out
+from the original all-knowing table. Now the customers info would take up just
+one line in the Customers table. A foreign key in the more streamlined Orders
+table representing the customer from the customers table would be used in the
+orders table.
+
+2. 1NF - A column cannot contain multiple values in a single cell. In the online
+grocery store example, if the original Orders table stored an array of products
+that were ordered in one cell this would violate the 1NF. Instead a Product_Orders
+table is needed, where each product from an order can be inserted as a new row
+using a FK of order_id to point it back to its corresponding order in the Orders
+table.
+
+  2NF - If the customers table from the online grocery store had information on
+the payment methods a customer had stored in the system as well as the shipping
+address of a customer since each of these separately depend on the customer but
+do not directly depend on each other they could be broken out into distinct
+tables, a customer_payment_methods table and a customer_shipping_address table,
+both would use the customer id as a FK.
+
+  3NF - In the products table of the online grocery store each product row
+could store info on the product itself as well as a column for the producer or
+manufacturer of the item. Initially that same table could also contain
+a contact phone or email for the producer. To conform to 3NF the row in the
+product table could just have the producer name or id and then a new producers
+table could again store the name as well as the contact info for the producer.
+
+BCNF - In a similar way with the producers and products tables, since a single
+product can be made by several different producers, the id of the producer alone
+and the product name (as it what it is, strawberries for instance) alone would
+not be sufficient to identify a particular product. But a super key table
+of the producer id and the product name would be able to single out a particular
+product.
+
+3.
+    CREATE TABLE students (
+      "id"             INTEGER,
+      "email"          VARCHAR(24),
+      "name"           VARCHAR(9)
+    );
+
+    CREATE TABLE professors (
+      "id"             INTEGER,
+      "name"           VARCHAR(9),
+      "subject"        VARCHAR(11)
+    );
+
+    CREATE TABLE student_records (
+      "student_id"     INTEGER,
+      "professor_id"   INTEGER,
+      "grade"          VARCHAR(1)
+    );
+
+    INSERT INTO students
+        ("id",        "email",                    "name")
+    VALUES
+        (1,           'john.b20@hogwarts.edu',    'John B'),
+        (2,           'sarah.s20@hogwarts.edu',   'Sarah S'),
+        (3,           'martha.l20@hogwarts.edu',  'Martha L'),
+        (4,           'james.g20@hogwarts.edu',   'James G'),
+        (5,           'stanley.p20@hogwarts.edu', 'Stanley P');
+
+    INSERT INTO professors
+        ("id", "name",           "subject")
+    VALUES
+        ( 1,   'Natalie M',      'Economics'),
+        ( 2,   'William C',      'Philosophy'),
+        ( 3,   'Mark W',         'Mathematics');
+
+    INSERT INTO student_records
+        ("student_id", "professor_id", "grade")
+    VALUES
+        ( 1,            2,              'A'),
+        ( 2,            2,              'C'),
+        ( 3,            1,              'A'),
+        ( 4,            3,              'B'),
+        ( 5,            1,              'B');
+
+4. In order to print records showing a students name, a class they took and the
+grade for that class it becomes necessary to join 3 tables together. Anytime
+multiple joins need to be configured this invites room for at least temporary
+error or confusion on the part of the sql developer. This spreading out of the
+related data into multiple tables, while reducing redundancies, does introduce
+some amount of cognitive overhead. On a plus side, two extra instances of naming
+the professor and their subject were able to be removed from the tables. Removing
+these two rows of two columns each from the 5 rows of data is % wise a pretty
+significant savings. Having a table with all of a students immediate info as well
+as a table with a professors info is helpful.
+
+5. It might be helpful to list the students name and the class Subject each as a
+column in the student_records table so that info could all be grabbed without
+the need for any join statements, it would make for more human-readable results
+that would be slower overall because the redundancies but would be quicker on
+the data reading side because no more joins.
+
+6. Data normalization if take to its extreme could result in so many tables. I
+played with also creating a Subjects table, broken out from the Professors table
+because at least in theory a subject is not dependent on a professor. However,
+in this example each subject is only taught by one professor so it did not make
+sense to break it out. And now as I write this and think about it again it does
+seem like a Subject table could be created and then in student_records a new
+column for subject_id could be added. This would lead to one more table, and one
+more join statement if the subject was needed in the results. All of this hinges
+on the unknown relationship between a professor and a subject. The most tangible
+benefit of this exercise was being able to remove redundant instances of the
+professors info from the original student_records table. If this was a large
+scale database many cells of data would have been saved in the process. 
