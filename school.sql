@@ -17,52 +17,61 @@ CREATE TABLE grades(
   grade      TEXT
 );
 
-insert into students (id, first_name, last_name, email) values (1, 'Haven', 'Domm', 'hdomm0@bing.com');
-insert into students (id, first_name, last_name, email) values (2, 'Jena', 'Hehir', 'jhehir1@dell.com');
-insert into students (id, first_name, last_name, email) values (3, 'Kaycee', 'Guise', 'kguise2@privacy.gov.au');
-insert into students (id, first_name, last_name, email) values (4, 'Stephani', 'Kendall', 'skendall3@fotki.com');
-insert into students (id, first_name, last_name, email) values (5, 'Loleta', 'Bastistini', 'lbastistini4@hao123.com');
-insert into students (id, first_name, last_name, email) values (6, 'Pearce', 'Ofen', 'pofen5@slate.com');
-insert into students (id, first_name, last_name, email) values (7, 'Keary', 'Elan', 'kelan6@nytimes.com');
-insert into students (id, first_name, last_name, email) values (8, 'Paxton', 'Lapthorn', 'plapthorn7@fema.gov');
-insert into students (id, first_name, last_name, email) values (9, 'Mordecai', 'Sichardt', 'msichardt8@amazon.de');
-insert into students (id, first_name, last_name, email) values (10, 'Mead', 'Bidder', 'mbidder9@amazonaws.com');
+insert into students
+  (id, first_name, last_name, email)
+values
+  (1, 'Haven', 'Domm', 'hdomm0@bing.com'),
+  (2, 'Jena', 'Hehir', 'jhehir1@dell.com'),
+  (3, 'Kaycee', 'Guise', 'kguise2@privacy.gov.au'),
+  (4, 'Stephani', 'Kendall', 'skendall3@fotki.com'),
+  (5, 'Loleta', 'Bastistini', 'lbastistini4@hao123.com'),
+  (6, 'Pearce', 'Ofen', 'pofen5@slate.com'),
+  (7, 'Keary', 'Elan', 'kelan6@nytimes.com'),
+  (8, 'Paxton', 'Lapthorn', 'plapthorn7@fema.gov'),
+  (9, 'Mordecai', 'Sichardt', 'msichardt8@amazon.de'),
+  (10, 'Mead', 'Bidder', 'mbidder9@amazonaws.com');
 
-insert into classes (id, name, teacher) values (1, 'Algebra', 'Morse McLeoid');
-insert into classes (id, name, teacher) values (2, 'Chemistry', 'Salomo Fredy');
-insert into classes (id, name, teacher) values (3, 'Computer Science', 'Bernardine Wiskar');
-insert into classes (id, name, teacher) values (4, 'History', 'Aeriela Freed');
-insert into classes (id, name, teacher) values (5, 'Modern Economics', 'Mick Coates');
-insert into classes (id, name, teacher) values (6, 'Art Theory', 'Vince Stolberger');
-insert into classes (id, name, teacher) values (7, 'Sculpture', 'Cherianne Beddoes');
-insert into classes (id, name, teacher) values (8, 'Physical Education', 'Orlando Tidgewell');
-insert into classes (id, name, teacher) values (9, 'Engineering', 'Starlin Amps');
-insert into classes (id, name, teacher) values (10, 'Music Appreciation', 'Jaynell Ralston');
+insert into classes
+  (id, name, teacher)
+values
+  (1, 'Algebra', 'Morse McLeoid'),
+  (2, 'Chemistry', 'Salomo Fredy'),
+  (3, 'Computer Science', 'Bernardine Wiskar'),
+  (4, 'History', 'Aeriela Freed'),
+  (5, 'Modern Economics', 'Mick Coates'),
+  (6, 'Art Theory', 'Vince Stolberger'),
+  (7, 'Sculpture', 'Cherianne Beddoes'),
+  (8, 'Physical Education', 'Orlando Tidgewell'),
+  (9, 'Engineering', 'Starlin Amps'),
+  (10, 'Music Appreciation', 'Jaynell Ralston');
 
-insert into grades (student_id, class_id, grade) values (1, 6, 'C');
-insert into grades (student_id, class_id, grade) values (1, 2, 'A');
-insert into grades (student_id, class_id, grade) values (2, 2, 'B');
-insert into grades (student_id, class_id, grade) values (2, 4, 'D');
-insert into grades (student_id, class_id, grade) values (3, 8, 'A');
-insert into grades (student_id, class_id, grade) values (3, 9, 'F');
-insert into grades (student_id, class_id, grade) values (4, 1, 'B');
-insert into grades (student_id, class_id, grade) values (4, 2, 'D');
-insert into grades (student_id, class_id, grade) values (5, 2, 'D');
-insert into grades (student_id, class_id, grade) values (5, 3, 'B');
-insert into grades (student_id, class_id, grade) values (6, 3, 'F');
-insert into grades (student_id, class_id, grade) values (6, 4, 'C');
-insert into grades (student_id, class_id, grade) values (7, 5, 'C');
-insert into grades (student_id, class_id, grade) values (7, 6, 'B');
-insert into grades (student_id, class_id, grade) values (8, 7, 'C');
-insert into grades (student_id, class_id, grade) values (8, 8, 'D');
-insert into grades (student_id, class_id, grade) values (9, 8, 'A');
-insert into grades (student_id, class_id, grade) values (9, 3, 'F');
-insert into grades (student_id, class_id, grade) values (10, 3, 'C');
-insert into grades (student_id, class_id, grade) values (10, 4, 'A');
-insert into grades (student_id, class_id, grade) values (1, 9, 'A');
-insert into grades (student_id, class_id, grade) values (2, 9, 'A');
-insert into grades (student_id, class_id, grade) values (4, 9, 'C');
-insert into grades (student_id, class_id, grade) values (5, 9, 'B');
+insert into grades
+  (student_id, class_id, grade)
+values
+  (1, 6, 'C'),
+  (1, 2, 'A'),
+  (2, 2, 'B'),
+  (2, 4, 'D'),
+  (3, 8, 'A'),
+  (3, 9, 'F'),
+  (4, 1, 'B'),
+  (4, 2, 'D'),
+  (5, 2, 'D'),
+  (5, 3, 'B'),
+  (6, 3, 'F'),
+  (6, 4, 'C'),
+  (7, 5, 'C'),
+  (7, 6, 'B'),
+  (8, 7, 'C'),
+  (8, 8, 'D'),
+  (9, 8, 'A'),
+  (9, 3, 'F'),
+  (10, 3, 'C'),
+  (10, 4, 'A'),
+  (1, 9, 'A'),
+  (2, 9, 'A'),
+  (4, 9, 'C'),
+  (5, 9, 'B');
 
 -- All students who have taken a particular class.
 
