@@ -1,0 +1,269 @@
+1. A subquery is a select statement nested somewhere inside another select
+statement. The results from the subquery can be used as a kind of temporary
+table that the outer select statement queries. Also a subquery can be used
+to filter down the results of the outer select statement.
+
+2. A subquery can be used as part of the SELECT portion of a query, inside
+the FROM statement, as a JOIN table, or as part of a WHERE clause.
+
+3. When a problem requires a solution that would take multiple steps to
+solve, a subquery can help to perform a first pass at getting towards
+the final desired results set and then those first results can be used
+with the outer query to arrive at a final results set.
+
+4. A row constructor builds a row using info passed in for columns. A row
+constructor could be used in place of a subquery select statement in the WHERE
+clause.
+
+5. The comparison will be NULL, not true.
+
+6. IN, NOT IN, EXISTS, NOT EXISTS, ALL, SOME/ANY
+
+7.
+
+// All volunteers. If the volunteer is fostering a dog, include each dog as well.
+
+SELECT first_name, last_name, (SELECT name FROM dogs AS d WHERE v.foster_dog_id = d.id) AS dog
+FROM volunteers AS v;
+
+first_name	last_name	 dog
+Albus	      Dumbledore null
+Rubeus	    Hagrid	   Munchkin
+Remus	      Lupin	     null
+Sirius	    Black	     null
+Marjorie	  Dursley	   Marmaduke
+
+// The cat's name, adopter's name, and adopted date for each cat adopted within
+// the past month to be displayed as part of the "Happy Tail" social media
+// promotion which posts recent successful adoptions.
+
+SELECT (SELECT c.name FROM cats c WHERE ca.cat_id = c.id) as cat_name,
+	(SELECT a.first_name FROM adopters a WHERE ca.adopter_id = a.id) as adopter_name,
+  ca.date
+FROM cat_adoptions ca
+WHERE ca.date > current_date - interval '30' day;
+
+cat_name	adopter_name	date
+Mushi	    Arabella	    2018-05-25T00:00:00.000Z
+Victoire	Argus	        2018-05-30T00:00:00.000Z
+
+
+// Adopters who have not yet chosen a dog to adopt and generate all possible
+// combinations of adopters and available dogs.
+
+SELECT available_adopters.first_name, available_dogs.name as dog
+FROM (SELECT d.name
+	    FROM dogs d
+	    LEFT JOIN dog_adoptions da
+	    ON d.id = da.dog_id
+	    WHERE da.dog_id IS NULL) as available_dogs,
+     (SELECT  a.first_name
+	    FROM adopters a
+	    LEFT JOIN dog_adoptions da
+      ON a.id = da.adopter_id
+	    WHERE da.adopter_id IS NULL) as available_adopters;
+
+first_name	dog
+Hermione	  Boujee
+Arabella	  Boujee
+Hermione	  Munchkin
+Arabella	  Munchkin
+Hermione	  Marley
+Arabella	  Marley
+Hermione	  Lassie
+Arabella	  Lassie
+Hermione	  Marmaduke
+Arabella	  Marmaduke
+
+// Lists of all cats and all dogs who have not been adopted.
+
+SELECT c.name
+FROM cats c
+WHERE c.id NOT IN
+ (SELECT ca.cat_id
+  FROM cat_adoptions ca);
+
+name
+Seashell
+Nala
+
+SELECT d.name
+FROM dogs d
+WHERE d.id NOT IN
+ (SELECT da.dog_id
+  FROM dog_adoptions da);
+
+name
+Boujee
+Munchkin
+Marley
+Lassie
+Marmaduke
+
+// The name of the person who adopted Rosco
+
+SELECT a.first_name, a.last_name
+FROM adopters a
+WHERE a.id IN
+	(SELECT da.adopter_id
+     FROM dog_adoptions da
+     JOIN dogs d
+     ON da.dog_id = d.id
+     WHERE d.name = 'Rosco');
+
+first_name	last_name
+Argus	      Filch
+
+
+8.
+
+// To determine if the library should buy more copies of a given book, please
+// provide the names and position, in order, of all of the patrons with a hold
+// (request for a book with all copies checked out) on "Advanced Potion-Making".
+
+SELECT (SELECT p.name FROM patrons p WHERE h.patron_id = p.id), h.rank
+FROM holds h
+JOIN books b
+ON h.isbn = b.isbn
+WHERE b.title = 'Advanced Potion-Making'
+ORDER BY rank;
+
+name	          rank
+Terry Boot	    1
+Cedric Diggory	2
+
+
+// Make a list of all book titles and denote whether or not a copy of that book
+// is checked out.
+
+SELECT b.title, (SELECT CASE WHEN t.isbn IS NOT NULL THEN 'true'
+                        END
+                 FROM transactions t
+                 WHERE t.checked_in_date IS NULL
+                 AND t.isbn = b.isbn) AS checked_out
+FROM books b;
+
+title	                                  checked_out
+Hogwarts: A History	                    null
+Fantastic Beasts and Where to Find Them	true
+Advanced Potion-Making	                true
+
+// In an effort to learn which books take longer to read, the librarians would
+// like you to create a list of average checked out time by book name in the
+// past month.
+
+SELECT b.title , (SELECT AVG(t.checked_in_date - t.checked_out_date)
+   FROM transactions AS t
+   WHERE t.checked_out_date > current_date - interval '30' day
+   AND t.checked_in_date IS NOT NULL
+   AND t.isbn = b.isbn
+   GROUP BY t.isbn) AS avg
+FROM books b
+JOIN transactions t
+ON t.isbn = b.isbn
+WHERE t.checked_out_date > current_date - interval '30' day
+AND t.checked_in_date IS NOT NULL
+GROUP BY b.isbn;
+
+title	                                  avg
+Fantastic Beasts and Where to Find Them	2.5000000000000000
+
+// In order to learn which items should be retired, make a list of all books that
+// have not been checked out in the past 5 years.
+
+SELECT b.title
+FROM books AS b
+WHERE b.isbn IN
+	(SELECT t.isbn
+     FROM transactions t
+   	 GROUP BY t.isbn
+     HAVING MAX(t.checked_out_date) < current_date - interval '5' year);
+
+title
+Hogwarts: A History
+
+// List all of the library patrons. If they have one or more books checked out,
+// correspond the books to the patrons.
+
+SELECT p.name, books.title
+FROM patrons p
+LEFT JOIN (SELECT t.patron_id, b.title
+	  	     FROM books b
+           JOIN transactions t
+           ON b.isbn = t.isbn
+           WHERE t.checked_in_date IS NULL) books
+ON p.id = books.patron_id;
+
+name	            title
+Hermione Granger	null
+Terry Boot	      Advanced Potion-Making
+Padma Patil	      null
+Cho Chang	        null
+Cedric Diggory	  Fantastic Beasts and Where to Find Them
+
+9.
+
+// To determine the most profitable airplanes, find all airplane models where
+// each flight has had over 250 paying customers in the past month.
+
+SELECT a.model
+FROM airplanes a
+JOIN (SELECT f.airplane_model
+      FROM transactions t
+      JOIN flights f
+      ON t.flight_number = f.flight_number
+      WHERE t.seats_sold > 250
+      AND t.date > current_date - interval '30' day) ft
+ON ft.airplane_model = a.model;
+
+model
+Boeing 787
+Airbus A330
+Boeing 777
+Airbus A380
+
+// To determine the most profitable flights, find all destination-origin pairs
+// where 90% or more of the seats have been sold in the past month.
+
+SELECT f.origin, f.destination
+FROM flights f
+WHERE f.flight_number IN
+     (SELECT t.flight_number
+      FROM transactions t
+      JOIN flights f
+      ON t.flight_number = f.flight_number
+      JOIN airplanes a
+      ON f.airplane_model = a.model
+      WHERE ( (cast(a.seat_capacity as float)) - (cast(t.seats_sold as float)) ) / (cast(a.seat_capacity as float)) < 0.1
+      AND t.date > current_date - interval '30' day);
+
+origin	destination
+LHR	    JFK
+SFO	    HKG
+LHR	    JNB
+
+
+// The airline is looking to expand its presence in Asia and globally. Find the
+// total revenue of any flight (not time restricted) arriving at or departing
+// from Singapore (SIN).
+
+SELECT SUM(t.total_revenue) as total_revenue
+FROM transactions t
+WHERE t.flight_number IN
+      (SELECT f.flight_number
+       FROM flights f
+       WHERE f.origin = 'SIN'
+       OR f.destination = 'SIN');
+
+total_revenue
+382386.82
+
+10. For readability, now that I have a better understanding of Subqueries I would
+say Subqueries are a little more readable to me than Joins. As I was working to
+get my head around using Subqueries there was some struggle to see how the subquery
+related to the Outer query, especially since it behaves differently if its in the
+SELECT statement or the FROM or the WHERE clause. It may have something to do
+with familiarity with these tables but Writing the Subqueries was a little easier for
+me once I got the hang of it. I can imagine there are scenarios where the structure
+of the tables makes a JOIN more appropriate than a Subquery where both could do,
+but there does seem to be some areas where one is easier to implement than the other.
